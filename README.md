@@ -8,7 +8,7 @@
 
 $\varphi$-Code is built around the principle of resource efficiency.
 
-* **Tiny LLM Focus:** The system leverages compact models like **Gemma 3.4B** for solution generation, which are manageable on standard consumer GPUs or even modern CPUs via quantization.
+* **Tiny LLM Focus:** The system leverages compact models like **Gemma 3-4B** for solution generation, which are manageable on standard consumer GPUs or even modern CPUs via quantization.
 * **LLaMA Server Integration:** By using the **`llama.cpp` LLaMA server**, $\varphi$-Code can efficiently offload the computationally intensive LLM inference to the best available local hardware with optimized performance.
 * **Efficient Ranker:** The ranking component, built on the **`sentence-transformers`** library, uses highly efficient embedding models that require minimal resources compared to the generative LLMs.
 
@@ -36,7 +36,7 @@ The core agent functionality is available through the `web-ui/main.py` Gradio ap
 
 * A Python environment.
 * A running **LLaMA server** (e.g., using `llama.cpp`'s `llama-server` tool) hosting a **non-reasoning** LLM.
-  * **Recommended Model:** [**Gemma 3.4B**](https://huggingface.co/google/gemma-3-4b-it) or similar code-centric, compact model.
+  * **Recommended Model:** [**Gemma 3-4B**](https://huggingface.co/google/gemma-3-4b-it) or similar code-centric, compact model.
   * **Recommended Settings:** Temperature of **0.95** and Top-K of **300**.
 
 #### Installation and Execution
@@ -119,7 +119,7 @@ python ranker/train.py \
 
 ## 🤝 Contributing
 
-φ-Code is an open-source effort. We welcome contributions to:
+$\varphi$-Code is an open-source effort. We welcome contributions to:
 
 * Expand the datasets for ranker training.
 * Improve the prompt templates (e.g., creating one for Codeforces).
