@@ -136,7 +136,12 @@ def generate_solutions(num_solutions: int, problem_statement: str):
         ns = {}
 
         # Get the solution class and get the function name used for the problem
-        exec(solution["code"], globals(), ns)
+        try:
+            exec(solution["code"], globals(), ns)
+        except SyntaxError:
+            log.error("Generated solution contains malformed code. Skipping")
+            continue
+
         # If the genrated code imports some symbol we need to import it here too
         for val in ns:
             if val == "Solution":
