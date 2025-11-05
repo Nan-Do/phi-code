@@ -97,6 +97,8 @@ python ranker/train.py \
   --output-dir my_trained_ranker
 ```
 
+---
+
 ## 📂 Project Structure
 
 ```
@@ -116,6 +118,8 @@ python ranker/train.py \
     ├── main.py                           # The main Gradio application script
     └── requirements.txt
 ```
+
+---
 
 ## 🤝 Contributing
 
