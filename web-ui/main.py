@@ -234,7 +234,7 @@ def change_solution(solutions, current_index, direction):
 with gr.Blocks(theme=gr.themes.Soft()) as demo:
     gr.Markdown(
         """
-        # φ-Code: A Competitive Programmer fueled by (tiny) LLMs.
+        # φ-Code: A Python Agentic Competitive Programmer Fueled by (tiny) LLMs.
         Click the generate button to get solutions from the model, then use the buttons to browse through them.
         """
     )
@@ -319,7 +319,7 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Phi-Code: A Competitive Programmer fueled by (tiny) LLMs."
+        description="φ-Code: A Python Agentic Competitive Programmer Fueled by (tiny) LLMs."
     )
 
     parser.add_argument(
