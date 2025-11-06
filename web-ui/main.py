@@ -1,76 +1,14 @@
 import argparse
-import ast
 import gradio as gr
-import re
 import torch
+import sys
 
+from leetcode import get_leetcode_problem_tests, run_leetcode_tests
 from log_config import log
 from openai import OpenAI
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
-
-DEBUG = False
-
-regex = re.compile(r", *(?=[a-zA-Z_][a-zA-Z0-9_]* *=)")
-
-
-def get_problem_tests(problem_statement: str):
-    """
-    Get the problem tests from the problem statement and format them into a JSON object
-    """
-    # --- Get the problem tests from Leetcode other sites won't work ---
-    log.info("Obtaining the problem tests.")
-    # Filter the input and output fields from the problem statement
-    input_fields = list(
-        filter(lambda x: x.strip().startswith("Input:"), problem_statement.split("\n"))
-    )
-    output_fields = list(
-        filter(lambda x: x.strip().startswith("Output:"), problem_statement.split("\n"))
-    )
-    if len(input_fields) != len(output_fields):
-        log.error(
-            "The number of input and output tests doesn't match for the given problem statement"
-        )
-        return None
-
-    # For each input: "colors=3, times=[1,2,3,4]"
-    # Parse it using regexp into a dictionary as {'colors': 3, 'times': [1,2,3,4]}
-    # Same for output.
-    problem_tests = []
-    for i in range(len(input_fields)):
-        input_data = {}
-        for pair in re.split(regex, input_fields[i][7:].strip()):
-            if "=" not in pair:
-                continue
-
-            var_name, value_str = pair.split("=", 1)
-            var_name = var_name.strip()
-            value_str = value_str.strip()
-
-            try:
-                parsed_value = ast.literal_eval(value_str)
-            except (ValueError, SyntaxError) as e:
-                log.error(
-                    f"Error parsing value for '{var_name}' ('{value_str}'): {e}. Skipping."
-                )
-                continue
-            input_data[var_name] = parsed_value
-        if not input_data:
-            log.error(f"Input data not found for example {input_fields[i]}, Skipping")
-        try:
-            problem_tests.append(
-                {
-                    "input": input_data,
-                    "output": ast.literal_eval(output_fields[i][7:].strip()),
-                }
-            )
-        except (ValueError, SyntaxError) as e:
-            log.error(
-                f"Error parsing value for 'Output' ('{output_fields[i][7:].strip()}'): {e}. Skipping."
-            )
-            continue
-
-    return problem_tests
+from utils import DEBUG
 
 
 def generate_solutions(num_solutions: int, problem_statement: str):
@@ -128,43 +66,7 @@ def generate_solutions(num_solutions: int, problem_statement: str):
 
     # --- Compute the number of passed tests ---
     log.info("Computing the number of passed tests")
-    for pos, solution in enumerate(generated_solutions):
-        generated_solutions[pos]["tests_passed"] = 0
-
-        if DEBUG:
-            log.info(f"Code: {solution['code']}")
-        ns = {}
-
-        # Get the solution class and get the function name used for the problem
-        try:
-            exec(solution["code"], globals(), ns)
-        except SyntaxError:
-            log.error("Generated solution contains malformed code. Skipping")
-            continue
-
-        # If the genrated code imports some symbol we need to import it here too
-        for val in ns:
-            if val == "Solution":
-                solution = ns["Solution"]()
-            else:
-                globals()[val] = ns[val]
-        func_name = [
-            name
-            for name in dir(ns["Solution"])
-            if callable(getattr(ns["Solution"], name)) and not name.startswith("__")
-        ][0]
-        if DEBUG:
-            log.info(f"Generated function {func_name}")
-        func = getattr(solution, func_name)
-
-        # Execute the tests with the generated code
-        tests_passed = 0
-        for example in problem_tests:
-            if func(**example["input"]) == example["output"]:
-                tests_passed += 1
-        generated_solutions[pos]["tests_passed"] = tests_passed
-        if DEBUG:
-            log.info(f"Solution {pos}: {tests_passed}/{len(problem_tests)}")
+    run_tests(generated_solutions, problem_tests)
 
     # Sort the solutions by the number of tests passed and the ranking score
     generated_solutions.sort(
@@ -350,11 +252,12 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "-t",
-        "--prompt",
-        metavar="prompt",
-        help="file containing the prompt template for the LLM.",
-        default="prompt.txt",
+        "-m",
+        "--site",
+        metavar="site",
+        help="specify the site for the tool to work (Options: ['leetcode']",
+        required=True,
+        choices=["leetcode"],
         type=str,
     )
 
@@ -362,7 +265,15 @@ if __name__ == "__main__":
     ranker = args.ranker
     server = args.server
     port = args.port
-    prompt_file = args.prompt
+    site = args.site
+
+    if site == "leetcode":
+        prompt_file = "./leetcode_prompt.txt"
+        get_problem_tests = get_leetcode_problem_tests
+        run_tests = run_leetcode_tests
+    else:
+        log.error("The specified site is unknown, please use a valid site.")
+        sys.exit(1)
 
     log.info("Reading the prompt file")
     with open(prompt_file) as f:
