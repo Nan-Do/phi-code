@@ -24,6 +24,28 @@ $\varphi$-Code is built around the principle of resource efficiency.
 
 ---
 
+## 📂 Project Structure
+
+```
+.
+├── datasets/                             # Competitive programming datasets for ranker training
+│   ├── atcoder.jsonl
+│   ├── codechef.jsonl
+│   └── ...
+├── LICENSE
+├── ranker/                               # Code for training and managing the sentence-transformers ranker
+│   ├── check_datasets.py
+│   ├── filter_datasets.py
+│   └── train.py                          # Main ranker training script
+└── web-ui/                               # Gradio web application for the coding agent
+    ├── general_prompt.txt
+    ├── leetcode_prompt.txt
+    ├── main.py                           # The main Gradio application script
+    └── requirements.txt
+```
+
+---
+
 ## 🚀 Getting Started
 
 This project is structured into two main components: the **`web-ui`** for running the coding agent and the **`ranker`** for training the model that sorts the solutions.
@@ -74,7 +96,7 @@ The core agent functionality is available through the `web-ui/main.py` Gradio ap
 
 The ranker is a crucial component that scores candidate solutions. It is trained as an embedding model to determine how relevant a generated solution is to a given problem statement.
 
-> **⚠️ Work in Progress:** Training a state-of-the-art ranker still requires significant resources. The current `web-ui` uses a pre-trained model, but the tools below are provided for those who wish to train their own.
+> **⚠️ Work in Progress:** Training a state-of-the-art ranker still requires significant resources. The current `web-ui` uses a pre-trained model, but the tools below are provided for those who wish, and have the means, to train their own.
 
 ### The `ranker` Folder
 
@@ -95,28 +117,6 @@ python ranker/train.py \
   --leetcode datasets/leetcode.jsonl \
   --codeforces datasets/codeforces.jsonl \
   --output-dir my_trained_ranker
-```
-
----
-
-## 📂 Project Structure
-
-```
-.
-├── datasets/                             # Competitive programming datasets for ranker training
-│   ├── atcoder.jsonl
-│   ├── codechef.jsonl
-│   └── ...
-├── LICENSE
-├── ranker/                               # Code for training and managing the sentence-transformers ranker
-│   ├── check_datasets.py
-│   ├── filter_datasets.py
-│   └── train.py                          # Main ranker training script
-└── web-ui/                               # Gradio web application for the coding agent
-    ├── general_prompt.txt
-    ├── leetcode_prompt.txt
-    ├── main.py                           # The main Gradio application script
-    └── requirements.txt
 ```
 
 ---
