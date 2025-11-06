@@ -90,7 +90,7 @@ The core agent functionality is available through the `web-ui/main.py` Gradio ap
 | `-r`, `--ranker` | Path or HuggingFace link to the ranker model (a `sentence-transformers` model). | `Salesforce/SFR-Embedding-Code-2B_R` |
 | `-s`, `--server` | Address of the `llama.cpp` server hosting the LLM. | `http://127.0.0.1` |
 | `-p`, `--port` | Port of the `llama.cpp` server. | `8080` |
-| `-m`, `--site` | From which site are the statemenst coming from | `leetcode` |
+| `-m`, `--site` | From which site are the problem statements | `leetcode` |
 
 ---
 
