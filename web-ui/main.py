@@ -78,6 +78,8 @@ def generate_solutions(num_solutions: int, problem_statement: str):
         change_solution(generated_solutions, -1, "Next")
     )
 
+    log.info(f"Process finished, {len(generated_solutions)} solutions generated")
+
     # Return all the values needed to update the Gradio components,
     # including making the hidden components visible.
     return (
