@@ -4,6 +4,9 @@
 
 ---
 
+![Screenshot](webui.png)
+---
+
 ## 💻 Designed for Consumer Hardware
 
 $\varphi$-Code is built around the principle of resource efficiency.
@@ -132,9 +135,3 @@ $\varphi$-Code is an open-source effort. We welcome contributions to:
 * Enhance the problem parsing to extract tests more reliably.
 
 Feel free to open an issue or submit a pull request!
-
----
-
-## 📸 How it looks
-
-![Screenshot](webui.png)
