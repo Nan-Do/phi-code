@@ -1,5 +1,6 @@
 import argparse
 import gradio as gr
+import os
 import torch
 import sys
 
@@ -268,6 +269,10 @@ if __name__ == "__main__":
     server = args.server
     port = args.port
     site = args.site
+
+    # Don't show the warning about forking causing problems the tokenizer is
+    # only used in the main thread.
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
     if site == "leetcode":
         prompt_file = "./leetcode_prompt.txt"
