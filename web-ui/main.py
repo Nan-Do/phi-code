@@ -53,8 +53,12 @@ def generate_solutions(num_solutions: int, problem_statement: str):
         except Exception as e:
             log.error(f"An error occurred generating a solution: {e}")
 
+    # --- Compute the number of passed tests ---
+    log.info("Running tests:")
+    run_tests(generated_solutions, problem_tests)
+
     # --- Rank the generated solutions ---
-    log.info("Ranking the solutions")
+    log.info("Ranking the solutions.")
     anchor_embedding = ranker.encode(problem_statement, convert_to_tensor=True)
     generation_embeddings = ranker.encode(code_generations, convert_to_tensor=True)
     scores_tensors = ranker.similarity(anchor_embedding, generation_embeddings)
@@ -63,10 +67,6 @@ def generate_solutions(num_solutions: int, problem_statement: str):
 
     if DEBUG:
         print(f"Scores: {scores_tensors.squeeze().tolist()}")
-
-    # --- Compute the number of passed tests ---
-    log.info("Computing the number of passed tests")
-    run_tests(generated_solutions, problem_tests)
 
     # Sort the solutions by the number of tests passed and the ranking score
     generated_solutions.sort(

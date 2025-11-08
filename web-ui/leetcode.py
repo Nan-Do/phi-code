@@ -138,7 +138,7 @@ def run_leetcode_tests(
         return
 
     # Initialize the progress bar for the problem tests
-    pbar = tqdm(total=len(code_queue), desc="Tests ran")
+    pbar = tqdm(total=len(code_queue))
     procs_queue = Queue()
     while code_queue:
         procs = []
