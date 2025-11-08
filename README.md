@@ -19,8 +19,8 @@ $\varphi$-Code is built around the principle of resource efficiency.
 
 * **Accessible & Open-Source:** Built with a focus on running powerful agents using less computational resources.
 * **Web-Based Interface:** A user-friendly Gradio web application for submitting problem statements and viewing generated solutions.
-* **Remote Solution Generation:** Connects to a remote LLM API (like a `llama.cpp` server) to generate multiple candidate Python solutions.
-* **Intelligent Ranking (Ranker Agent):** Utilizes an embedding model from the **`sentence-transformers`** ecosystem to evaluate the feasibility of generated solutions (samples) against the problem statement (anchor).
+* **Remote Solution Generation:** Connects to a remote LLM API (like a [`llama.cpp`](https://github.com/ggml-org/llama.cpp) server) to generate multiple candidate Python solutions.
+* **Intelligent Ranking (Ranker Agent):** Utilizes an embedding model from the **[`sentence-transformers`](https://sbert.net/)** ecosystem to evaluate the feasibility of generated solutions (samples) against the problem statement (anchor).
 * **Automated Testing:** Parses example tests from the problem statement, runs the candidate solutions, and sorts them by tests passed and the ranker's confidence score.
 
 ---
@@ -60,7 +60,7 @@ The core agent functionality is available through the `web-ui/main.py` Gradio ap
 #### Prerequisites
 
 * A Python environment.
-* A running **LLaMA server** (e.g., using `llama.cpp`'s `llama-server` tool) hosting a **non-reasoning** LLM.
+* A running **LLaMA server** (e.g., using [`llama.cpp`](https://github.com/ggml-org/llama.cpp)'s `llama-server` tool) hosting a **non-reasoning** LLM.
   * **Recommended Model:** [**Gemma 3-4B**](https://huggingface.co/google/gemma-3-4b-it) or similar code-centric, compact model.
   * **Recommended Settings:** Temperature of **0.95** and Top-K of **300**.
 
@@ -88,14 +88,14 @@ The core agent functionality is available through the `web-ui/main.py` Gradio ap
 
 | Option | Description | Example |
 | :--- | :--- | :--- |
-| `-r`, `--ranker` | Path or HuggingFace link to the ranker model (a `sentence-transformers` model). | `Salesforce/SFR-Embedding-Code-2B_R` |
-| `-s`, `--server` | Address of the `llama.cpp` server hosting the LLM. | `http://127.0.0.1` |
-| `-p`, `--port` | Port of the `llama.cpp` server. | `8080` |
+| `-r`, `--ranker` | Path or HuggingFace link to the ranker model (a [`sentence-transformers`](https://sbert.net/) model). | `Salesforce/SFR-Embedding-Code-2B_R` |
+| `-s`, `--server` | Address of the [`llama.cpp`](https://github.com/ggml-org/llama.cpp) server hosting the LLM. | `http://127.0.0.1` |
+| `-p`, `--port` | Port of the [`llama.cpp`](https://github.com/ggml-org/llama.cpp) server. | `8080` |
 | `-m`, `--site` | From which site are the problem statements | `leetcode` |
 
 ---
 
-## 🧠 Training the Ranker Agent with `sentence-transformers`
+## 🧠 Training the Ranker Agent with [`sentence-transformers`](https://sbert.net/)
 
 The ranker is a crucial component that scores candidate solutions. It is trained as an embedding model to determine how relevant a generated solution is to a given problem statement.
 
@@ -103,7 +103,7 @@ The ranker is a crucial component that scores candidate solutions. It is trained
 
 ### The `ranker` Folder
 
-The `ranker` folder contains the code for fine-tuning the ranker model using the **`sentence-transformers`** library, typically leveraging a Siamese-network architecture for contrastive learning (e.g., Multiple Negative Ranking Loss or Triplet Loss).
+The `ranker` folder contains the code for fine-tuning the ranker model using the **[`sentence-transformers`](https://sbert.net/)** library, typically leveraging a Siamese-network architecture for contrastive learning (e.g., Multiple Negative Ranking Loss or Triplet Loss).
 
 * `train.py`: The main script for fine-tuning a ranker model.
 * `check_datasets.py`, `filter_datasets.py`, `sample_dataset.py`: Utilities for preparing and managing the training data in `datasets/`.
