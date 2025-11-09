@@ -63,11 +63,15 @@ def generate_solutions(num_solutions: int, problem_statement: str):
     anchor_embedding = ranker.encode(problem_statement, convert_to_tensor=True)
     generation_embeddings = ranker.encode(code_generations, convert_to_tensor=True)
     scores_tensors = ranker.similarity(anchor_embedding, generation_embeddings)
-    for pos, score in enumerate(scores_tensors.squeeze().tolist()):
-        generated_solutions[pos]["score"] = score
 
     if DEBUG:
         print(f"Scores: {scores_tensors.squeeze().tolist()}")
+
+    if len(generated_solutions) > 1:
+        for pos, score in enumerate(scores_tensors.squeeze().tolist()):
+            generated_solutions[pos]["score"] = score
+    elif len(generated_solutions) == 1:
+        generated_solutions[0]["score"] = scores_tensors.squeeze().tolist()
 
     # Sort the solutions by the number of tests passed and the ranking score
     generated_solutions.sort(
@@ -79,7 +83,8 @@ def generate_solutions(num_solutions: int, problem_statement: str):
         change_solution(generated_solutions, -1, "Next")
     )
 
-    log.info(f"Process finished, {len(generated_solutions)} solutions generated")
+    add_s = "s" if len(generated_solutions) != 1 else ""
+    log.info(f"Process finished, {len(generated_solutions)} solution{add_s} generated")
 
     # Return all the values needed to update the Gradio components,
     # including making the hidden components visible.
