@@ -12,6 +12,64 @@ from tqdm import tqdm
 from utils import DEBUG
 
 
+def get_completions_from_prompt(prompt: str, num_completions: int = 1) -> str:
+    # Retrieve the code for the given prompt. We'll keep asking for
+    # completions until we reach stop, an error or num_completions
+    # are consumed.
+    got_stop, continue_completions = False, True
+    reasoning_completions, code_completions = [], []
+    while continue_completions and (num_completions != 0):
+        try:
+            # Send the completion request.
+            completion = client.chat.completions.create(
+                model="coder-model", messages=[{"role": "user", "content": prompt}]
+            )
+            choice = completion.choices[0]
+            response = choice.message
+            finish_reason = choice.finish_reason
+
+            # Check the finish reason if the model is asking to continue,
+            # to stop, or there has been an error.
+            if finish_reason == "stop":
+                got_stop = True
+                continue_completions = False
+            elif finish_reason == "length":
+                continue_completions = True
+            else:
+                log.error(
+                    f'Solution generation produced: "{choice.finish_reason}", finising current generation.'
+                )
+                break
+
+            # Cosume one completion.
+            if num_completions > 0:
+                num_completions -= 1
+            # If it's a reasoning model, store the reasoning tokens.
+            if hasattr(response, "reasoning_content"):
+                reasoning_completions.append(response.reasoning_content)
+            # Store the generated code.
+            code_completions.append(response.content)
+
+        except Exception as e:
+            log.error(f"An error occurred generating a solution: {e}")
+            break
+
+    if DEBUG:
+        for reasoning_completion in reasoning_completions:
+            print(reasoning_completion)
+
+    # Notify the user if the model was asking for more completions but we reached
+    # the limit.
+    if continue_completions and (num_completions == 0) and (not got_stop):
+        log.info("Solution generation reached the limit of completions without stop.")
+
+    # Strip the markdown in case the model used it in its answer.
+    code_body: str = "".join(code_completions)
+    if code_body.startswith("```"):
+        code_body = "\n".join(code_body.split("\n")[1:-1])
+    return code_body
+
+
 def generate_solutions(num_solutions: int, problem_statement: str):
     """
     Fills the prompt, queries the llama server, generates num_solutions,
@@ -30,48 +88,52 @@ def generate_solutions(num_solutions: int, problem_statement: str):
     # --- Generate the solutions ---
     code_generations = []
     generated_solutions = []
+    run_analysis = True
     log.info(f"Generating {num_solutions} solutions:")
-    for number in tqdm(range(num_solutions)):
-        try:
-            # Get the completions only non reasoning completions are supported
-            # If the completion goes over the limit of tokens or doesn't finish
-            # in a proper way skip it.
-            completion = client.chat.completions.create(
-                model="coder-model", messages=[{"role": "user", "content": prompt}]
-            )
-            choice = completion.choices[0]
-            if choice.finish_reason != "stop":
-                log.error(
-                    f"Solution generation {number} finished with {choice.finish_reason} instead of a stop. Skipping it."
-                )
-            # Strip the markdown in case the model used it in its answer.
-            code_body: str = choice.message.content
-            if code_body.startswith("```"):
-                code_body = "\n".join(code_body.split("\n")[1:-1])
-            # Add the code to the solutions, one will be used for ranking and the other for the gradio ui
-            code_generations.append(code_body)
-            generated_solutions.append({"code": code_body})
-        except Exception as e:
-            log.error(f"An error occurred generating a solution: {e}")
+    for _ in tqdm(range(num_solutions)):
+        code_generation = get_completions_from_prompt(prompt, 2)
+        if code_generation:
+            code_generations.append(code_generation)
+            generated_solutions.append({"code": code_generation})
 
-    # --- Compute the number of passed tests ---
-    log.info("Running tests:")
-    run_tests(generated_solutions, problem_tests)
+    # The model couldn't generate any valid solution. Update the
+    # solutions to notify the user in the web ui, skip the analysis
+    # and log the error.
+    if not generated_solutions:
+        run_analysis = False
+        log.error(
+            "No valid solution was generated, skipping checks, please generate new solutions."
+        )
+        generated_solutions = [
+            {
+                "code": "THERE HAS BEEN A PROBLEM WITH THE GENERATION PROCESS\nPLEASE PRESS THE GENERATE SOLUTION BUTTONS AGAIN.",
+                "tests_passed": 0,
+                "score": 0.0,
+            }
+        ]
 
-    # --- Rank the generated solutions ---
-    log.info("Ranking the solutions.")
-    anchor_embedding = ranker.encode(problem_statement, convert_to_tensor=True)
-    generation_embeddings = ranker.encode(code_generations, convert_to_tensor=True)
-    scores_tensors = ranker.similarity(anchor_embedding, generation_embeddings)
+    # If everthing has been ok so far, check how many tests each solution passes and rank them.
+    if run_analysis:
+        # --- Compute the number of passed tests ---
+        log.info("Running tests:")
+        run_tests(generated_solutions, problem_tests)
 
-    if DEBUG:
-        print(f"Scores: {scores_tensors.squeeze().tolist()}")
+        # --- Rank the generated solutions ---
+        log.info("Ranking the solutions.")
+        anchor_embedding = ranker.encode(problem_statement, convert_to_tensor=True)
+        generation_embeddings = ranker.encode(code_generations, convert_to_tensor=True)
+        scores_tensors = ranker.similarity(anchor_embedding, generation_embeddings)
 
-    if len(generated_solutions) > 1:
-        for pos, score in enumerate(scores_tensors.squeeze().tolist()):
-            generated_solutions[pos]["score"] = score
-    elif len(generated_solutions) == 1:
-        generated_solutions[0]["score"] = scores_tensors.squeeze().tolist()
+        if DEBUG:
+            print(f"Scores: {scores_tensors.squeeze().tolist()}")
+
+        # tolist() doesn't return a list of 1 so if there is one solution
+        # store the value appropriately.
+        if len(generated_solutions) > 1:
+            for pos, score in enumerate(scores_tensors.squeeze().tolist()):
+                generated_solutions[pos]["score"] = score
+        else:
+            generated_solutions[0]["score"] = scores_tensors.squeeze().tolist()
 
     # Sort the solutions by the number of tests passed and the ranking score
     generated_solutions.sort(
@@ -83,8 +145,16 @@ def generate_solutions(num_solutions: int, problem_statement: str):
         change_solution(generated_solutions, -1, "Next")
     )
 
-    add_s = "s" if len(generated_solutions) != 1 else ""
-    log.info(f"Process finished, {len(generated_solutions)} solution{add_s} generated")
+    # Log that the process has ended.
+    if run_analysis:
+        add_s = "s" if len(generated_solutions) != 1 else ""
+        log.info(
+            f"Process finished, {len(generated_solutions)} solution{add_s} generated"
+        )
+    else:
+        log.info(
+            f"Process finished, no solutions were generated, please generate new solutions."
+        )
 
     # Return all the values needed to update the Gradio components,
     # including making the hidden components visible.
