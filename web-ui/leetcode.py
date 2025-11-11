@@ -76,6 +76,9 @@ def get_leetcode_problem_tests(problem_statement: str):
 def run_leetcode_test(
     solution_position: int, code: str, problem_tests: List[str], procs_queue: Queue
 ):
+    # Import some common types as sometimes the models forget.
+    from typing import List, Dict, Set, Union, Tuple, Sequence
+
     if DEBUG:
         log.info(f"Code: {code}")
 
@@ -114,10 +117,8 @@ def run_leetcode_test(
         try:
             if func(**example["input"]) == example["output"]:
                 tests_passed += 1
-        except TypeError:
-            log.error(
-                "There was an error calling the generated solution function. Skipping"
-            )
+        except (TypeError, IndexError, NameError) as e:
+            log.error(f'"{e}": calling the generated solution function. Skipping')
 
     procs_queue.put((solution_position, tests_passed))
 
