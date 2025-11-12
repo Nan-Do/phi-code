@@ -169,7 +169,9 @@ def build_web_ui(_prompt_template, _client, _ranker, _get_problem_tests, _run_te
         )
 
         problem_statement = gr.Textbox(label="Problem Statement:", lines=45)
-        num_solutions = gr.Number(label="Number of Solutions to Generate:", value=10)
+        num_solutions = gr.Number(
+            label="Number of Solutions to Generate:", value=10, minimum=1
+        )
 
         # State variables to hold the solutions and the current index
         solutions_state = gr.State(value=[])
