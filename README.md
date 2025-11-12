@@ -38,12 +38,13 @@ $\varphi$-Code is built around the principle of resource efficiency.
 │   ├── check_datasets.py
 │   ├── filter_datasets.py
 │   └── train.py                          # Main ranker training script
-└── web-ui/                               # Gradio web application for the coding agent
+└── solver/                               # Solver coding agent.
     ├── general_prompt.txt
     ├── leetcode_prompt.txt
     ├── leetcode.py                       # LeetCode module.
-    ├── utils.py                          
-    ├── main.py                           # The main Gradio application script
+    ├── utils.py
+    ├── main.py                           # The main module 
+    ├── web_ui.py                         # Web Interface.
     └── requirements.txt
 ```
 
