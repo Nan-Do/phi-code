@@ -52,11 +52,11 @@ $\varphi$-Code is built around the principle of resource efficiency.
 
 ## 🚀 Getting Started
 
-This project is structured into two main components: the **`web-ui`** for running the coding agent and the **`ranker`** for training the model that sorts the solutions.
+This project is structured into two main components: the **`solver`** for running the coding agent and the **`ranker`** for training the model that sorts the solutions.
 
 ### 1. Running the Web UI
 
-The core agent functionality is available through the `web-ui/main.py` Gradio application.
+The core agent functionality is available through the `solver/main.py` Gradio application.
 
 #### Prerequisites
 
@@ -67,7 +67,7 @@ The core agent functionality is available through the `web-ui/main.py` Gradio ap
 
 #### Installation and Execution
 
-1. Navigate to the `web-ui` directory.
+1. Navigate to the `solver` directory.
 2. Install dependencies:
 
     ```bash
@@ -77,7 +77,7 @@ The core agent functionality is available through the `web-ui/main.py` Gradio ap
 3. Run the main application, providing the necessary server details:
 
     ```bash
-    python web-ui/main.py \
+    python solver/main.py \
       --server <YOUR_SERVER_ADDRESS> \
       --port <YOUR_SERVER_PORT> \
       --site leetcode
@@ -100,7 +100,7 @@ The core agent functionality is available through the `web-ui/main.py` Gradio ap
 
 The ranker is a crucial component that scores candidate solutions. It is trained as an embedding model to determine how relevant a generated solution is to a given problem statement.
 
-> **⚠️ Work in Progress:** Training a state-of-the-art ranker still requires significant resources. The current `web-ui` uses a pre-trained model, but the tools below are provided for those who wish, and have the means, to train their own.
+> **⚠️ Work in Progress:** Training a state-of-the-art ranker still requires significant resources. The current `solver` uses a pre-trained model, but the tools below are provided for those who wish, and have the means, to train their own.
 
 ### The `ranker` Folder
 
