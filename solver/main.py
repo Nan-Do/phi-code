@@ -10,6 +10,16 @@ from sentence_transformers import SentenceTransformer
 from web_ui import build_web_ui
 
 
+def check_positive(value):
+    try:
+        value = int(value)
+        if value <= 0:
+            raise argparse.ArgumentTypeError(f"{value} is not a positive integer")
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"{value} is not a positive integer")
+    return value
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="φ-Code: A Python Agentic Competitive Programmer Fueled by (tiny) LLMs."
@@ -46,7 +56,7 @@ if __name__ == "__main__":
         "-m",
         "--site",
         metavar="site",
-        help="specify the site for the tool to work (Options: ['leetcode']",
+        help="specify the competitive web site the problems are coming from (Options: leetcode)",
         required=True,
         choices=["leetcode"],
         type=str,
@@ -56,10 +66,18 @@ if __name__ == "__main__":
         "-i",
         "--interface",
         metavar="interface",
-        help="specify the interface for the app (Options: ['web']",
+        help="specify the interface for the app (Options: web)",
         choices=["web"],
         default="web",
         type=str,
+    )
+
+    parser.add_argument(
+        "-n",
+        "--number",
+        metavar="number",
+        help="specify the number of solutions to generate.",
+        type=check_positive,
     )
 
     args = parser.parse_args()
@@ -68,6 +86,7 @@ if __name__ == "__main__":
     port = args.port
     site = args.site
     interface = args.interface
+    num_solutions = args.number
 
     # Don't show the warning about forking causing problems the tokenizer is
     # only used in the main thread.
@@ -98,6 +117,6 @@ if __name__ == "__main__":
     if interface == "web":
         log.info("Using the web interface")
         app = build_web_ui(
-            prompt_template, client, ranker, get_problem_tests, run_tests
+            prompt_template, client, ranker, get_problem_tests, run_tests, num_solutions
         )
         app.launch()
