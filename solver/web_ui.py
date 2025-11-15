@@ -150,7 +150,13 @@ def change_solution(solutions, current_index, direction):
 
 # --- Gradio UI ---
 def build_web_ui(
-    _prompt_template, _client, _ranker, _get_problem_tests, _run_tests, _num_solutions
+    _prompt_template,
+    _client,
+    _ranker,
+    _get_problem_tests,
+    _run_tests,
+    _num_solutions,
+    statement=None,
 ):
     global prompt_template, client, ranker, get_problem_tests, run_tests
 
@@ -170,7 +176,9 @@ def build_web_ui(
             """
         )
 
-        problem_statement = gr.Textbox(label="Problem Statement:", lines=45)
+        problem_statement = gr.Textbox(
+            label="Problem Statement:", value=statement, lines=45
+        )
         num_solutions = gr.Number(
             label="Number of Solutions to Generate:", value=_num_solutions, minimum=1
         )

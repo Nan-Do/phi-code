@@ -29,7 +29,7 @@ if __name__ == "__main__":
         "-r",
         "--ranker",
         metavar="ranker_model",
-        help="path to the model that will be used as a ranker. It can be a HuggingFace link (Salesforce/SFR-Embedding-Code-2B_R)",
+        help="path to the model that will be used as a ranker. It can be a HuggingFace link (Salesforce/SFR-Embedding-Code-2B_R).",
         default="Salesforce/SFR-Embedding-Code-2B_R",
         type=str,
     )
@@ -38,7 +38,7 @@ if __name__ == "__main__":
         "-s",
         "--server",
         metavar="server",
-        help="address of the server running a llama.cpp server",
+        help="address of the server running a llama.cpp server.",
         required=True,
         type=str,
     )
@@ -47,7 +47,7 @@ if __name__ == "__main__":
         "-p",
         "--port",
         metavar="port",
-        help="port of the server running a llama.cpp server",
+        help="port of the server running a llama.cpp server.",
         required=True,
         type=str,
     )
@@ -56,7 +56,7 @@ if __name__ == "__main__":
         "-m",
         "--site",
         metavar="site",
-        help="specify the competitive web site the problems are coming from (Options: leetcode)",
+        help="specify the competitive web site the problems are coming from (Options: leetcode).",
         required=True,
         choices=["leetcode"],
         type=str,
@@ -66,9 +66,17 @@ if __name__ == "__main__":
         "-i",
         "--interface",
         metavar="interface",
-        help="specify the interface for the app (Options: web)",
+        help="specify the interface for the app (Options: web).",
         choices=["web"],
         default="web",
+        type=str,
+    )
+
+    parser.add_argument(
+        "-f",
+        "--statement",
+        metavar="statement",
+        help="specify a file containing the problem statement to solve.",
         type=str,
     )
 
@@ -87,6 +95,15 @@ if __name__ == "__main__":
     site = args.site
     interface = args.interface
     num_solutions = args.number
+    statement_file = args.statement
+
+    # Check that the provided statment file exists and read it.
+    statement = None
+    if not os.path.exists(statement_file):
+        log.error("The provided statement file doesn't exist")
+    else:
+        with open(statement_file) as f:
+            statement = f.read()
 
     # Don't show the warning about forking causing problems the tokenizer is
     # only used in the main thread.
@@ -117,6 +134,12 @@ if __name__ == "__main__":
     if interface == "web":
         log.info("Using the web interface")
         app = build_web_ui(
-            prompt_template, client, ranker, get_problem_tests, run_tests, num_solutions
+            prompt_template,
+            client,
+            ranker,
+            get_problem_tests,
+            run_tests,
+            num_solutions,
+            statement,
         )
         app.launch()
