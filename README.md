@@ -19,6 +19,7 @@ $\varphi$-Code is built around the principle of resource efficiency.
 
 * **Accessible & Open-Source:** Built with a focus on running powerful agents using less computational resources.
 * **Web-Based Interface:** A user-friendly Gradio web application for submitting problem statements and viewing generated solutions.
+* **Terminal mode:** Run the tool as a shell command.
 * **Remote Solution Generation:** Connects to a remote LLM API (like a [`llama.cpp`](https://github.com/ggml-org/llama.cpp) server) to generate multiple candidate Python solutions.
 * **Intelligent Ranking (Ranker Agent):** Utilizes an embedding model from the **[`sentence-transformers`](https://sbert.net/)** ecosystem to evaluate the feasibility of generated solutions (samples) against the problem statement (anchor).
 * **Automated Testing:** Parses example tests from the problem statement, runs the candidate solutions, and sorts them by tests passed and the ranker's confidence score.
@@ -29,22 +30,23 @@ $\varphi$-Code is built around the principle of resource efficiency.
 
 ```
 .
-├── datasets/                             # Competitive programming datasets for ranker training
+├── datasets/                             # Competitive programming datasets for ranker training.
 │   ├── atcoder.jsonl
 │   ├── codechef.jsonl
 │   └── ...
 ├── LICENSE
-├── ranker/                               # Code for training and managing the sentence-transformers ranker
+├── ranker/                               # Code for training and managing the sentence-transformers ranker.
 │   ├── check_datasets.py
 │   ├── filter_datasets.py
-│   └── train.py                          # Main ranker training script
+│   └── train.py                          # Main ranker training script.
 └── solver/                               # Solver coding agent.
     ├── general_prompt.txt
     ├── leetcode_prompt.txt
     ├── leetcode.py                       # LeetCode module.
     ├── utils.py
-    ├── main.py                           # The main module 
+    ├── main.py                           # The main module.
     ├── web_ui.py                         # Web Interface.
+    ├── terminal.py                       # Run the tool as a shell command.
     └── requirements.txt
 ```
 
@@ -93,6 +95,10 @@ The core agent functionality is available through the `solver/main.py` Gradio ap
 | `-s`, `--server` | Address of the [`llama.cpp`](https://github.com/ggml-org/llama.cpp) server hosting the LLM. | `http://127.0.0.1` |
 | `-p`, `--port` | Port of the [`llama.cpp`](https://github.com/ggml-org/llama.cpp) server. | `8080` |
 | `-m`, `--site` | From which site are the problem statements | `leetcode` |
+| `-i`, `--interface` | Which interface to use (terminal, web) | `web` |
+| `-f`, `--statement` | Text file with the problem statement to use| `statement.txt` |
+| `-n`, `--number` | Number of solutions to generate | `10` |
+| `-o`, `--output_file` | File to store the generated solutions in jsonl format | `solutions.jsonl` |
 
 ---
 
