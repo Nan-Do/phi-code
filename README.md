@@ -2,7 +2,8 @@
 
 > **$\varphi$-Code** (phi-code) is an open-source, agent-based system designed to tackle competitive programming problems. Inspired by projects like [AlphaCode](https://alphacode.deepmind.com/), $\varphi$-Code's core philosophy is **accessibility**: it aims to achieve strong performance using **small-to-medium (tiny) Language Models (LLMs)**, making powerful coding agents runnable even on a **consumer-level laptop or desktop PC**.
 
-![Screenshot](webui.png)
+![WebBased Screenshot](webui.png)
+![Curses Screenshot](curses_ui.png)
 ---
 
 ## 💻 Designed for Consumer Hardware
@@ -19,6 +20,7 @@ $\varphi$-Code is built around the principle of resource efficiency.
 
 * **Accessible & Open-Source:** Built with a focus on running powerful agents using less computational resources.
 * **Web-Based Interface:** A user-friendly Gradio web application for submitting problem statements and viewing generated solutions.
+* **Curses-Based Interface:** A user-friendly curses interface for generating and viewing generated solutions from the terminal.
 * **Terminal mode:** Run the tool as a shell command.
 * **Remote Solution Generation:** Connects to a remote LLM API (like a [`llama.cpp`](https://github.com/ggml-org/llama.cpp) server) to generate multiple candidate Python solutions.
 * **Intelligent Ranking (Ranker Agent):** Utilizes an embedding model from the **[`sentence-transformers`](https://sbert.net/)** ecosystem to evaluate the feasibility of generated solutions (samples) against the problem statement (anchor).
@@ -46,6 +48,7 @@ $\varphi$-Code is built around the principle of resource efficiency.
     ├── utils.py
     ├── main.py                           # The main module.
     ├── web_ui.py                         # Web Interface.
+    ├── curses_ui.py                      # Curses Interface.
     ├── terminal.py                       # Run the tool as a shell command.
     └── requirements.txt
 ```
@@ -95,7 +98,7 @@ The core agent functionality is available through the `solver/main.py` Gradio ap
 | `-s`, `--server` | Address of the [`llama.cpp`](https://github.com/ggml-org/llama.cpp) server hosting the LLM. | `http://127.0.0.1` |
 | `-p`, `--port` | Port of the [`llama.cpp`](https://github.com/ggml-org/llama.cpp) server. | `8080` |
 | `-m`, `--site` | From which site are the problem statements | `leetcode` |
-| `-i`, `--interface` | Which interface to use (terminal, web) | `web` |
+| `-i`, `--interface` | Which interface to use (terminal, web, curses) | `web` |
 | `-f`, `--statement` | Text file with the problem statement to use| `statement.txt` |
 | `-n`, `--number` | Number of solutions to generate | `10` |
 | `-o`, `--output_file` | File to store the generated solutions in jsonl format | `solutions.jsonl` |
