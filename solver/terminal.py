@@ -11,7 +11,6 @@ def run_terminal_mode(
     run_tests,
     num_solutions,
     problem_statement,
-    output_file,
 ):
     problem_tests = get_problem_tests(problem_statement)
     if DEBUG:

@@ -173,7 +173,6 @@ if __name__ == "__main__":
             run_tests,
             num_solutions,
             statement,
-            output_file,
         )
 
         log.info(f"Storing solutions in {output_file}.")
