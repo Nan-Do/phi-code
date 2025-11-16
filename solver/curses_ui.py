@@ -1,14 +1,14 @@
 import curses
+import json
 import sys
 import time
 
 from curses import wrapper
 from terminal import run_terminal_mode
 
-prompt_template = ""
-problem_statement = ""
 num_solutions = 0
-client, ranker = None, None
+prompt_template, problem_statement = "", ""
+client, ranker, output_file = None, None, ""
 get_problem_tests, run_tests = None, None
 
 
@@ -34,8 +34,94 @@ def generate_solutions(stdscr):
     return solutions
 
 
-def show_input_modal(stdscr):
-    """Creates a centered modal to prompt the user for an integer."""
+def show_save_solutions_dialog(stdscr, solutions):
+    """Creates a centered modal to prompt the user for a path to store the solutions, saves
+    the solutions and returns the path."""
+    h, w = stdscr.getmaxyx()
+
+    # Define modal dimensions
+    MODAL_HEIGHT = 7
+    MODAL_WIDTH = 45  # Slightly adjusted width for better centering
+
+    # Calculate starting positions for centering
+    start_y = (h - MODAL_HEIGHT) // 2
+    start_x = (w - MODAL_WIDTH) // 2
+
+    # Check if there is enough space to draw the modal
+    if start_y < 0 or start_x < 0:
+        return 0  # Cannot draw modal if screen is too small
+
+    curses.curs_set(1)  # Show cursor for input
+
+    # Create the new window for the modal
+    modal_win = curses.newwin(MODAL_HEIGHT, MODAL_WIDTH, start_y, start_x)
+    modal_win.box()  # Draw a border
+    modal_win.keypad(True)  # Enable special keys like KEY_BACKSPACE
+
+    TEXT_PAIR = curses.color_pair(2)
+
+    # Title
+    title = "File path to store the solutions:"
+    modal_win.addstr(
+        1, (MODAL_WIDTH - len(title)) // 2, title, curses.A_BOLD | TEXT_PAIR
+    )
+
+    prompt = "File path:"
+    modal_win.addstr(3, 2, prompt, TEXT_PAIR)
+
+    user_input = output_file[:]
+
+    while True:
+        # Clear the input line and error line
+        modal_win.addstr(4, 2, " " * (MODAL_WIDTH - 4))
+        modal_win.addstr(MODAL_HEIGHT - 2, 2, " " * (MODAL_WIDTH - 4))
+
+        # Redraw current input
+        modal_win.addstr(4, 2, user_input, TEXT_PAIR)
+        modal_win.move(4, 2 + len(user_input))  # Move cursor to end
+        modal_win.refresh()
+
+        key = modal_win.getch()
+
+        if key == curses.KEY_ENTER or key in [10, 13]:  # Enter key
+            break
+
+        elif key == curses.KEY_BACKSPACE or key == 127:  # Backspace
+            user_input = user_input[:-1]
+
+        elif 32 <= key < 127:  # Printable ASCII character
+            char = chr(key)
+            # Only allow to input positive values
+            user_input += char
+
+    # Clean up and display result
+    curses.curs_set(0)  # Hide cursor
+
+    with open(user_input, "w") as w:
+        for solution in solutions:
+            w.write(json.dumps(solution))
+            w.write("\n")
+    # Display the confirmed message briefly in the modal area
+    confirmation = f"Solutions saved at: {user_input}"
+
+    # Clear the modal area, then print confirmation
+    modal_win.clear()
+    modal_win.addstr(
+        MODAL_HEIGHT // 2,
+        (MODAL_WIDTH - len(confirmation)) // 2,
+        confirmation,
+        curses.A_BOLD | curses.A_REVERSE | TEXT_PAIR,
+    )
+    modal_win.refresh()
+
+    time.sleep(1)  # Show message for 1 second before closing
+    del modal_win
+
+    return user_input
+
+
+def show_change_num_solutions_dialog(stdscr):
+    """Creates a centered modal to prompt the user for a positive integer and returns it."""
     h, w = stdscr.getmaxyx()
 
     # Define modal dimensions
@@ -129,7 +215,7 @@ def show_input_modal(stdscr):
     time.sleep(1)  # Show message for 1 second before closing
     del modal_win
 
-    return value  # Indica
+    return value
 
 
 # --- Helper Function to Draw Content in a Curses Window ---
@@ -228,6 +314,8 @@ def draw_screen(stdscr, solutions, num_solution, delta_lines):
 
 
 def main(stdscr):
+    global output_file, num_solutions
+
     try:
         """The main curses application function."""
         # --- 1. Initialization and Setup ---
@@ -278,11 +366,18 @@ def main(stdscr):
                     delta_lines = 0
                     num_solution += 1
                     lines_code = len(solutions[num_solution]["code"].split("\n"))
+
             elif key in [ord("g"), ord("G")]:
                 solutions = generate_solutions(stdscr)
+                num_solution = 0
+
             elif key in [ord("u"), ord("U")]:
-                global num_solutions
-                num_solutions = show_input_modal(stdscr)
+                num_solutions = show_change_num_solutions_dialog(stdscr)
+
+            elif key in [ord("s"), ord("S")]:
+                save_path = show_save_solutions_dialog(stdscr, solutions)
+                if save_path:
+                    output_file = save_path
 
     except Exception as e:
         curses.endwin()
@@ -297,6 +392,7 @@ def build_curses_ui(
     _run_tests,
     _num_solutions,
     statement,
+    _output_file,
 ):
     global \
         prompt_template, \
@@ -305,7 +401,8 @@ def build_curses_ui(
         get_problem_tests, \
         run_tests, \
         num_solutions, \
-        problem_statement
+        problem_statement, \
+        output_file
 
     prompt_template = _prompt_template
     client = _client
@@ -314,6 +411,7 @@ def build_curses_ui(
     run_tests = _run_tests
     num_solutions = _num_solutions
     problem_statement = prompt_template.format(statement)
+    output_file = _output_file
 
     try:
         wrapper(main)

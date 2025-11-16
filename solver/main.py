@@ -183,6 +183,9 @@ if __name__ == "__main__":
                 w.write("\n")
         log.info("Process finished.")
     elif interface == "curses":
+        if output_file is None:
+            output_file = ""
+
         log.info(
             "Running the app in terminal curses mode, the interface will load after generating the solutions."
         )
@@ -194,4 +197,5 @@ if __name__ == "__main__":
             run_tests,
             num_solutions,
             statement,
+            output_file,
         )
