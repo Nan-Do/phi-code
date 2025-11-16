@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import torch
 import sys
@@ -164,7 +165,7 @@ if __name__ == "__main__":
         app.launch()
     elif interface == "terminal":
         log.info("Running the app in terminal mode, no interface will be used.")
-        run_terminal_mode(
+        generated_solutions = run_terminal_mode(
             prompt_template,
             client,
             ranker,
@@ -174,3 +175,10 @@ if __name__ == "__main__":
             statement,
             output_file,
         )
+
+        log.info(f"Storing solutions in {output_file}.")
+        with open(output_file, "w") as w:
+            for solution in generated_solutions:
+                w.write(json.dumps(solution))
+                w.write("\n")
+        log.info("Process finished.")

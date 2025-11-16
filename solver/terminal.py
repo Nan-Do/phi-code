@@ -1,5 +1,3 @@
-import json
-
 from log_config import log
 from tqdm import tqdm
 from utils import get_completions_from_prompt, DEBUG
@@ -79,9 +77,4 @@ def run_terminal_mode(
         key=lambda dict: (dict.get("tests_passed"), dict.get("score")), reverse=True
     )
 
-    log.info(f"Storing solutions in {output_file}.")
-    with open(output_file, "w") as w:
-        for solution in generated_solutions:
-            w.write(json.dumps(solution))
-            w.write("\n")
-    log.info("Process finished.")
+    return generated_solutions
