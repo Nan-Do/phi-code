@@ -1,8 +1,13 @@
 # 💡 $\varphi$-Code: A Python Agentic Competitive Programmer Fueled by (tiny) LLMs
 
 > **$\varphi$-Code** (phi-code) is an open-source, agent-based system designed to tackle competitive programming problems. Inspired by projects like [AlphaCode](https://alphacode.deepmind.com/), $\varphi$-Code's core philosophy is **accessibility**: it aims to achieve strong performance using **small-to-medium (tiny) Language Models (LLMs)**, making powerful coding agents runnable even on a **consumer-level laptop or desktop PC**.
+>
+### Web-Based Interface
 
 ![WebBased Screenshot](webui.png)
+
+### Curses-Based Interface
+
 ![Curses Screenshot](curses_ui.png)
 ---
 
@@ -21,7 +26,7 @@ $\varphi$-Code is built around the principle of resource efficiency.
 * **Accessible & Open-Source:** Built with a focus on running powerful agents using less computational resources.
 * **Web-Based Interface:** A user-friendly Gradio web application for submitting problem statements and viewing generated solutions.
 * **Curses-Based Interface:** A user-friendly curses interface for generating and viewing generated solutions from the terminal.
-* **Terminal mode:** Run the tool as a shell command.
+* **Terminal Mode:** Run the tool as a shell command.
 * **Remote Solution Generation:** Connects to a remote LLM API (like a [`llama.cpp`](https://github.com/ggml-org/llama.cpp) server) to generate multiple candidate Python solutions.
 * **Intelligent Ranking (Ranker Agent):** Utilizes an embedding model from the **[`sentence-transformers`](https://sbert.net/)** ecosystem to evaluate the feasibility of generated solutions (samples) against the problem statement (anchor).
 * **Automated Testing:** Parses example tests from the problem statement, runs the candidate solutions, and sorts them by tests passed and the ranker's confidence score.
