@@ -12,6 +12,28 @@ client, ranker = None, None
 get_problem_tests, run_tests = None, None
 
 
+def generate_solutions(stdscr):
+    # Enter terminal mode.
+    curses.def_prog_mode()
+    curses.endwin()
+
+    solutions = run_terminal_mode(
+        prompt_template,
+        client,
+        ranker,
+        get_problem_tests,
+        run_tests,
+        num_solutions,
+        problem_statement,
+    )
+
+    # Restore the curses mode and return the solutions.
+    curses.reset_prog_mode()
+    curses.curs_set(0)
+
+    return solutions
+
+
 def show_input_modal(stdscr):
     """Creates a centered modal to prompt the user for an integer."""
     h, w = stdscr.getmaxyx()
@@ -223,15 +245,7 @@ def main(stdscr):
             # Pair 2: White Text on Black (for main content/code)
             curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLACK)
 
-        solutions = run_terminal_mode(
-            prompt_template,
-            client,
-            ranker,
-            get_problem_tests,
-            run_tests,
-            num_solutions,
-            problem_statement,
-        )
+        solutions = generate_solutions(stdscr)
 
         delta_lines, num_solution, lines_code = (
             0,

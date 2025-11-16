@@ -4,12 +4,13 @@ import os
 import torch
 import sys
 
+from curses_ui import build_curses_ui
 from leetcode import get_leetcode_problem_tests, run_leetcode_tests
 from log_config import log
 from openai import OpenAI
 from sentence_transformers import SentenceTransformer
-from web_ui import build_web_ui
 from terminal import run_terminal_mode
+from web_ui import build_web_ui
 
 
 def check_positive(value):
@@ -68,8 +69,8 @@ if __name__ == "__main__":
         "-i",
         "--interface",
         metavar="interface",
-        help="specify the interface for the app (Options: web, terminal).",
-        choices=["web", "terminal"],
+        help="specify the interface for the app (Options: web, terminal, curses).",
+        choices=["web", "terminal", "curses"],
         default="web",
         type=str,
     )
@@ -181,3 +182,16 @@ if __name__ == "__main__":
                 w.write(json.dumps(solution))
                 w.write("\n")
         log.info("Process finished.")
+    elif interface == "curses":
+        log.info(
+            "Running the app in terminal curses mode, the interface will load after generating the solutions."
+        )
+        build_curses_ui(
+            prompt_template,
+            client,
+            ranker,
+            get_problem_tests,
+            run_tests,
+            num_solutions,
+            statement,
+        )
