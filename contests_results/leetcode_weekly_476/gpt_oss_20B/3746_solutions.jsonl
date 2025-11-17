@@ -1,0 +1,16 @@
+{"code": "import sys\nclass Solution:\n    def minLength(self, s: str) -> int:\n        return abs(s.count('a') - s.count('b'))", "tests_passed": 3, "score": 0.80859375}
+{"code": "import sys\nclass Solution:\n    def minLength(self, s: str) -> int:\n        return abs(s.count('a') - s.count('b'))\n", "tests_passed": 3, "score": 0.80859375}
+{"code": "import sys\nclass Solution:\n    def minLength(self, s: str) -> int:\n        return abs(s.count('a') - s.count('b'))", "tests_passed": 3, "score": 0.80859375}
+{"code": "import sys\n\nclass Solution:\n    def minLength(self, s: str) -> int:\n        return abs(s.count('a') - s.count('b'))", "tests_passed": 3, "score": 0.8046875}
+{"code": "import sys\n\nclass Solution:\n    def minLength(self, s: str) -> int:\n        return abs(s.count('a') - s.count('b'))\n", "tests_passed": 3, "score": 0.8046875}
+{"code": "import sys\n\nclass Solution:\n    def minLength(self, s: str) -> int:\n        return abs(s.count('a') - s.count('b'))", "tests_passed": 3, "score": 0.8046875}
+{"code": "import sys\n\nclass Solution:\n    def minimumLength(self, s: str) -> int:\n        return abs(s.count('a') - s.count('b'))", "tests_passed": 3, "score": 0.8046875}
+{"code": "import sys\n\nclass Solution:\n    def minimumLength(self, s: str) -> int:\n        return abs(s.count('a') - s.count('b'))", "tests_passed": 3, "score": 0.8046875}
+{"code": "import sys\n\nclass Solution:\n    def minLength(self, s: str) -> int:\n        return abs(s.count('a') - s.count('b'))", "tests_passed": 3, "score": 0.8046875}
+{"code": "import sys\n\nclass Solution:\n    def minimumLength(self, s: str) -> int:\n        count_a = s.count('a')\n        count_b = len(s) - count_a\n        return abs(count_a - count_b)", "tests_passed": 3, "score": 0.796875}
+{"code": "import sys\n\nclass Solution:\n    def minimumLength(self, s: str) -> int:\n        count_a = s.count('a')\n        return abs(count_a - (len(s) - count_a))", "tests_passed": 3, "score": 0.78515625}
+{"code": "import sys\n\nclass Solution:\n    def minLength(self, s: str) -> int:\n        a = s.count('a')\n        b = len(s) - a\n        return abs(a - b)", "tests_passed": 3, "score": 0.78125}
+{"code": "import sys\n\nclass Solution:\n    def minimumLength(self, s: str) -> int:\n        a = s.count('a')\n        return abs(a - (len(s) - a))", "tests_passed": 3, "score": 0.78125}
+{"code": "class Solution:\n    def minimumLength(self, s: str) -> int:\n        a = s.count('a')\n        return abs(a - (len(s) - a))", "tests_passed": 3, "score": 0.78125}
+{"code": "import sys\n\nclass Solution:\n    def minLength(self, s: str) -> int:\n        diff = 0\n        for ch in s:\n            diff += 1 if ch == 'a' else -1\n        return abs(diff)", "tests_passed": 3, "score": 0.78125}
+{"code": "class Solution:\n    def minLength(self, s: str) -> int:\n        a = s.count('a')\n        b = len(s) - a\n        return abs(a - b)", "tests_passed": 3, "score": 0.7734375}
