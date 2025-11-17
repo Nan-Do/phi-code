@@ -76,4 +76,15 @@ def run_terminal_mode(
         key=lambda dict: (dict.get("tests_passed"), dict.get("score")), reverse=True
     )
 
+    # Log that the process has ended.
+    if run_analysis:
+        add_s = "s" if len(generated_solutions) != 1 else ""
+        log.info(
+            f"Process finished, {len(generated_solutions)} solution{add_s} generated"
+        )
+    else:
+        log.info(
+            "Process finished, no solutions were generated, please generate new solutions."
+        )
+
     return generated_solutions
