@@ -12,7 +12,7 @@ client, ranker, output_file = None, None, ""
 get_problem_tests, run_tests = None, None
 
 
-def generate_solutions(stdscr):
+def generate_solutions():
     # Enter terminal mode.
     curses.def_prog_mode()
     curses.endwin()
@@ -333,7 +333,7 @@ def main(stdscr):
             # Pair 2: White Text on Black (for main content/code)
             curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLACK)
 
-        solutions = generate_solutions(stdscr)
+        solutions = generate_solutions()
 
         delta_lines, num_solution, lines_code = (
             0,
@@ -368,7 +368,7 @@ def main(stdscr):
                     lines_code = len(solutions[num_solution]["code"].split("\n"))
 
             elif key in [ord("g"), ord("G")]:
-                solutions = generate_solutions(stdscr)
+                solutions = generate_solutions()
                 num_solution = 0
 
             elif key in [ord("u"), ord("U")]:
