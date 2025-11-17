@@ -153,7 +153,9 @@ if __name__ == "__main__":
     log.info("Done")
 
     if interface == "web":
-        log.info("Using the web interface.")
+        log.info(
+            "Using the web interface. Open the interface in a browser, terminal mode will continue here."
+        )
         app = build_web_ui(
             prompt_template,
             client,
@@ -187,7 +189,7 @@ if __name__ == "__main__":
             output_file = ""
 
         log.info(
-            "Running the app in terminal curses mode, the interface will load after generating the solutions."
+            "Running the app in curses mode, the interface will load after generating the solutions in terminal mode."
         )
         build_curses_ui(
             prompt_template,
