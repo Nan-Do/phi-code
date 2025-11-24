@@ -4,7 +4,7 @@
 
 ## 📰 News
 
-The **$\varphi$-Code** agentic system achieved a significant milestone by successfully answering **all** questions for the latest LeetCode [Weekly Contest 476](https://leetcode.com/contest/weekly-contest-476/) (as of 11-17-2025) **correctly on the first attempt!**
+The **$\varphi$-Code** agentic system achieved a significant milestone by successfully answering **all** questions for the latests LeetCode contests [Weekly Contest 476](https://leetcode.com/contest/weekly-contest-476/), and [Weekly Contest 477](https://leetcode.com/contest/weekly-contest-477/) (as of 11-24-2025) **correctly on the first attempt!**
 
 This feat highlights the effectiveness of $\varphi$-Code's full pipeline, where the **Remote Solution Generation** produces candidate solutions, the **Intelligent Ranker Agent** selects the most promising one, and **Automated Testing** ensures the final submission is robust.
 
