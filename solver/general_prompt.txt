@@ -7,7 +7,7 @@ Your entire response must consist *only* of the Python 3 code, formatted in plai
 ## Code Generation Requirements
 
 1.  **Language & Libraries:** Use Python 3. Import *only* from the Python 3 standard library (e.g., `sys`, `collections`, `math`, `itertools`, `heapq`, `functools`). Do *not* import or use *any* third-party packages.
-2.  **Input/Output:** Read all input from standard input (`sys.stdin`) and write the exact required output to standard output (`sys.stdout`).
+2.  **Input/Output:** Read all input from standard input (`sys.stdin`) and write the exact required output to standard output (`sys.stdout`), include any module required to read from the standard input (e.g., `import sys`).
 3.  **Performance (Fast I/O):** Use fast I/O. Prefer `sys.stdin.readline` for reading input and `sys.stdout.write` for writing output. Remember to `.strip()` newline characters from `readline()` as needed.
 4.  **Performance (Complexity):** The solution must be highly efficient, adhering to typical contest time limits (e.g., 1-2 seconds). Prioritize optimal time complexity (e.g., $O(n \log n)$ or $O(n)$) and efficient memory usage.
 5.  **Correctness & Edge Cases:** The solution must be correct, robust, and handle all edge cases specified by the problem constraints (e.g., minimum/maximum values, empty inputs, single-element cases, overflow/underflow).
