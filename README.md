@@ -62,6 +62,7 @@ $\varphi$-Code is built around the principle of resource efficiency.
 │   ├── filter_datasets.py
 │   └── train.py                          # Main ranker training script.
 └── solver/                               # Solver coding agent.
+    ├── atcoder.py                        # Atcoder module.
     ├── general_prompt.txt
     ├── leetcode_prompt.txt
     ├── leetcode.py                       # LeetCode module.
@@ -117,7 +118,7 @@ The core agent functionality is available through the `solver/main.py` Gradio ap
 | `-r`, `--ranker` | Path or HuggingFace link to the ranker model (a [`sentence-transformers`](https://sbert.net/) model). | `Salesforce/SFR-Embedding-Code-2B_R` |
 | `-s`, `--server` | Address of the [`llama.cpp`](https://github.com/ggml-org/llama.cpp) server hosting the LLM. | `http://127.0.0.1` |
 | `-p`, `--port` | Port of the [`llama.cpp`](https://github.com/ggml-org/llama.cpp) server. | `8080` |
-| `-m`, `--site` | From which site are the problem statements | `leetcode` |
+| `-m`, `--site` | From which site are the problem statements (leetcode, atcoder)| `leetcode` |
 | `-i`, `--interface` | Which interface to use (terminal, web, curses) | `web` |
 | `-f`, `--statement` | Text file with the problem statement to use| `statement.txt` |
 | `-n`, `--number` | Number of solutions to generate | `10` |
