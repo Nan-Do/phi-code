@@ -1,5 +1,4 @@
 import argparse
-import json
 import os
 import torch
 import sys
@@ -11,6 +10,7 @@ from log_config import log
 from openai import OpenAI
 from sentence_transformers import SentenceTransformer
 from terminal import run_terminal_mode
+from utils import store_solutions
 from web_ui import build_web_ui
 
 
@@ -171,6 +171,7 @@ if __name__ == "__main__":
             statement,
         )
         app.launch()
+
     elif interface == "terminal":
         log.info("Running the app in terminal mode, no interface will be used.")
         generated_solutions = run_terminal_mode(
@@ -182,13 +183,8 @@ if __name__ == "__main__":
             num_solutions,
             statement,
         )
+        store_solutions(output_file, generated_solutions)
 
-        log.info(f"Storing solutions in {output_file}.")
-        with open(output_file, "w") as w:
-            for solution in generated_solutions:
-                w.write(json.dumps(solution))
-                w.write("\n")
-        log.info("Process finished.")
     elif interface == "curses":
         if output_file is None:
             output_file = ""

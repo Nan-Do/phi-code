@@ -1,5 +1,8 @@
+import json
+
 from log_config import log
 from openai import OpenAI
+from typing import Dict, List
 
 
 DEBUG = False
@@ -63,3 +66,14 @@ def get_completions_from_prompt(
     if code_body.startswith("```"):
         code_body = "\n".join(code_body.split("\n")[1:-1])
     return code_body
+
+
+def store_solutions(
+    output_file: str, generated_solutions: List[Dict[str, str | int | float]]
+):
+    log.info(f"Storing solutions in {output_file}.")
+    with open(output_file, "w") as w:
+        for solution in generated_solutions:
+            w.write(json.dumps(solution))
+            w.write("\n")
+    log.info("Process finished.")

@@ -5,6 +5,7 @@ import time
 
 from curses import wrapper
 from terminal import run_terminal_mode
+from utils import store_solutions
 
 num_solutions = 0
 prompt_template, problem_statement = "", ""
@@ -26,6 +27,8 @@ def generate_solutions():
         num_solutions,
         problem_statement,
     )
+    if output_file:
+        store_solutions(output_file, solutions)
 
     # Restore the curses mode and return the solutions.
     curses.reset_prog_mode()
