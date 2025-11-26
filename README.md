@@ -110,7 +110,7 @@ The core agent functionality can be accessed through the `solver/main.py` Gradio
       --intereface web
     ```
 
-    > **Note:** The current version can solve **[LeetCode](https://leetcode.com/)** problems and **[Atcoder](https://atcoder.jp/)** problem statements.
+    > **Note:** The current version can solve **[LeetCode](https://leetcode.com/)** and **[Atcoder](https://atcoder.jp/)** problems.
 
 #### `main.py` Command Line Options
 
