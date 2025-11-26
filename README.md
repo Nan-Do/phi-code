@@ -82,7 +82,7 @@ This project is structured into two main components: the **`solver`** for runnin
 
 ### 1. Running the Web UI
 
-The core agent functionality is available through the `solver/main.py` Gradio application.
+The core agent functionality can be accessed through the `solver/main.py` Gradio application (two other interfaces are also available, but the web UI is the most user-friendly).
 
 #### Prerequisites
 
@@ -106,10 +106,11 @@ The core agent functionality is available through the `solver/main.py` Gradio ap
     python solver/main.py \
       --server <YOUR_SERVER_ADDRESS> \
       --port <YOUR_SERVER_PORT> \
-      --site leetcode
+      --site leetcode \
+      --intereface web
     ```
 
-    > **Note:** The current version is primarily focused on **LeetCode** problems, utilizing `leetcode_prompt.txt`. This is expected to improve in future updates. Problem statements from other sites won't work.
+    > **Note:** The current version can solve **[LeetCode](https://leetcode.com/)** problems and **[Atcoder](https://atcoder.jp/)** problem statements.
 
 #### `main.py` Command Line Options
 
