@@ -111,7 +111,7 @@ The core agent functionality can be accessed through the `solver/main.py` Gradio
       --intereface web
     ```
 
-    > **Note:** The current version can solve **[LeetCode](https://leetcode.com/)** and **[Atcoder](https://atcoder.jp/)** problems.
+    > **Note:** The current version can solve **[LeetCode](https://leetcode.com/)**, **[Atcoder](https://atcoder.jp/)**, and **[Codeforces](https://codeforces.com/)**. problems.
 
 #### `main.py` Command Line Options
 
@@ -120,7 +120,7 @@ The core agent functionality can be accessed through the `solver/main.py` Gradio
 | `-r`, `--ranker` | Path or HuggingFace link to the ranker model (a [`sentence-transformers`](https://sbert.net/) model). | `Salesforce/SFR-Embedding-Code-2B_R` |
 | `-s`, `--server` | Address of the [`llama.cpp`](https://github.com/ggml-org/llama.cpp) server hosting the LLM. | `http://127.0.0.1` |
 | `-p`, `--port` | Port of the [`llama.cpp`](https://github.com/ggml-org/llama.cpp) server. | `8080` |
-| `-m`, `--site` | From which site are the problem statements (leetcode, atcoder, codeforces)| `leetcode` |
+| `-m`, `--site` | From which site are the problem statements ([leetcode](https://leetcode.com/), [atcoder](https://atcoder.jp/), [Codeforces](https://codeforces.com/))| `leetcode` |
 | `-i`, `--interface` | Which interface to use (terminal, web, curses) | `web` |
 | `-f`, `--statement` | Text file with the problem statement to use| `statement.txt` |
 | `-n`, `--number` | Number of solutions to generate | `10` |
@@ -162,7 +162,6 @@ python ranker/train.py \
 $\varphi$-Code is an open-source effort. We welcome contributions to:
 
 * Expand the datasets for ranker training.
-* Improve the prompt templates (e.g., creating one for Codeforces).
 * Enhance the problem parsing to extract tests more reliably.
 
 Feel free to open an issue or submit a pull request!
