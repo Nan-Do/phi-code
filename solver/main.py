@@ -4,6 +4,7 @@ import torch
 import sys
 
 from atcoder import get_atcoder_problems_tests, run_atcoder_tests
+from codeforces import get_codeforces_problems_tests, run_codeforces_tests
 from curses_ui import build_curses_ui
 from leetcode import get_leetcode_problem_tests, run_leetcode_tests
 from log_config import log
@@ -60,9 +61,9 @@ if __name__ == "__main__":
         "-m",
         "--site",
         metavar="site",
-        help="specify the competitive web site the problems are coming from (Options: leetcode, atcoder).",
+        help="specify the competitive web site the problems are coming from (Options: leetcode, atcoder, codeforces).",
         required=True,
-        choices=["leetcode", "atcoder"],
+        choices=["leetcode", "atcoder", "codeforces"],
         type=str,
     )
 
@@ -135,10 +136,17 @@ if __name__ == "__main__":
         prompt_file = "./leetcode_prompt.txt"
         get_problem_tests = get_leetcode_problem_tests
         run_tests = run_leetcode_tests
+
     elif site == "atcoder":
         prompt_file = "./general_prompt.txt"
         get_problem_tests = get_atcoder_problems_tests
         run_tests = run_atcoder_tests
+
+    elif site == "codeforces":
+        prompt_file = "./general_prompt.txt"
+        get_problem_tests = get_codeforces_problems_tests
+        run_tests = run_codeforces_tests
+
     else:
         log.error("The specified site is unknown, please use a valid site.")
         sys.exit(1)
